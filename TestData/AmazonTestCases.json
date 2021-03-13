@@ -1,0 +1,12 @@
+{
+  "TestCase": [
+    {
+      "Id": "1",
+      "SearchInputParameter": "Samsung Galaxy Note 20"
+    },
+    {
+      "Id": "2",
+      "SearchInputParameter": "Samsung Galaxy S20 FE 5G"
+    }
+  ]
+}
