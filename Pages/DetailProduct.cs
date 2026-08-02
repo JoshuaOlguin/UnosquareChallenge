@@ -17,12 +17,10 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement AddToCartButton => driver.FindElementById("add-to-cart-button");
-        public IWebElement PriceOfProduct => driver.FindElementById("exports_desktop_qualifiedBuybox_priceInsideBuyBox");
-        public IWebElement CartIconButton => driver.FindElementByCssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']");
-        public IWebElement CartItemsCount => driver.FindElementById("nav-cart-count-container");
-
-
+        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.Id("add-to-cart-button")).Displayed? driver.FindElement(By.Id("add-to-cart-button")) : null);
+        public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='a-price aok-align-center apex-pricetopay-value']")).Displayed? driver.FindElement(By.CssSelector("[class*='a-price aok-align-center apex-pricetopay-value']")) : null);
+        public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")).Displayed ? driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")) : null);
+        public IWebElement CartItemsCount => wait.Until(d => driver.FindElement(By.Id("nav-cart-count-container")).Displayed ? driver.FindElement(By.Id("nav-cart-count-container")) : null);
         public bool VerifyCartCounter()
         {
             try
@@ -30,7 +28,7 @@ namespace AutomatedScript.Pages
                 wait.Until(ExpectedConditions.TextToBePresentInElement(CartItemsCount, "1"));
                 return true;
             }
-            catch (Exception ex)
+            catch (NoSuchElementException)
             {
                 return false;
             }
@@ -48,8 +46,8 @@ namespace AutomatedScript.Pages
 
         public decimal GetPriceOfProduct()
         {
-            var strPrice = PriceOfProduct.FindElement(By.CssSelector("[class*='a-size-medium a-color-price']")).Text;
-            strPrice = String.Concat(strPrice.Where(x => x == '.' || Char.IsDigit(x)));
+            string strPrice = PriceOfProduct.Text.Replace("MXN", string.Empty);
+            strPrice = strPrice.Replace("\r\n", ".");
             decimal price;
             bool convt = decimal.TryParse(strPrice, out price);
 

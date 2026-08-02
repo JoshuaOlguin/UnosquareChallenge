@@ -18,20 +18,22 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement ProceedToCheckoutButton => driver.FindElementById("proceed-to-checkout-action");
-        public IWebElement PriceOfProduct => driver.FindElementByCssSelector("[class*='a-size-medium a-color-base sc-price sc-white-space-nowrap sc-product-price a-text-bold']");
+        public IWebElement ProceedToCheckoutButton => wait.Until(d => driver.FindElementById("proceed-to-checkout-action")).Displayed ? driver.FindElementById("proceed-to-checkout-action") : null;
+        public IWebElement CartSubtotal => wait.Until(d => driver.FindElementById("sc-subtotal-amount-buybox")).Displayed ? driver.FindElementById("sc-subtotal-amount-buybox") : null;
         public IList<IWebElement> LinkButtons => driver.FindElements(By.CssSelector("input.a-color-link"));
-        public IWebElement EmptyCartMessage => driver.FindElementByCssSelector("[class*='a-row sc-your-amazon-cart-is-empty']");
+
+        public IWebElement EmptyCartMessage;
 
         public bool VerifyEmptyCartOperation()
         {
             try
             {
-                wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[class*='a-row sc-your-amazon-cart-is-empty']")));
-                return true;
+                EmptyCartMessage = wait.Until(d => driver.FindElementByCssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")).Displayed ? driver.FindElementByCssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']") : null;
+                return EmptyCartMessage != null ? EmptyCartMessage.Displayed : false;
             }
-            catch (Exception ex)
+            catch (NoSuchElementException)
             {
+
                 return false;
             }
         }
@@ -54,15 +56,15 @@ namespace AutomatedScript.Pages
                 wait.Until(ExpectedConditions.ElementToBeClickable(ProceedToCheckoutButton));
                 return true;
             }
-            catch (Exception ex)
+            catch (NoSuchElementException)
             {
                 return false;
             }
         }
 
-        public decimal GetPriceOfProduct()
+        public decimal GetCartSubtotal()
         {
-            var strPrice = PriceOfProduct.Text;
+            var strPrice = CartSubtotal.Text;
             strPrice = String.Concat(strPrice.Where(x => x == '.' || Char.IsDigit(x)));
             decimal price;
             bool convt = decimal.TryParse(strPrice, out price);

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using AutomatedScript.Models;
 using NUnit.Framework;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
@@ -24,7 +22,7 @@ namespace AutomatedScript.Framework
         [TearDown]
         public void TestCleanup()
         {
-            _driver.Close();
+            _driver.Quit();
             _driver.Dispose();
         }
 
@@ -36,7 +34,6 @@ namespace AutomatedScript.Framework
                 {
                     _driver = new ChromeDriver();
                     _driver.Manage().Window.Maximize();
-                    _driver.Navigate().GoToUrl("https://www.amazon.com/");
                 }
                 return _driver;
             }
