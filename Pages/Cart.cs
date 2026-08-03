@@ -53,10 +53,21 @@ namespace AutomatedScript.Pages
         {
             try
             {
-                wait.Until(ExpectedConditions.ElementToBeClickable(ProceedToCheckoutButton));
+                wait.Until(d =>
+                {
+                    try
+                    {
+                        var el = d.FindElement(By.Id("proceed-to-checkout-action"));
+                        return el != null && el.Displayed && el.Enabled;
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        return false;
+                    }
+                });
                 return true;
             }
-            catch (NoSuchElementException)
+            catch (WebDriverTimeoutException)
             {
                 return false;
             }

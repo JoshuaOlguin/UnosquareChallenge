@@ -25,10 +25,21 @@ namespace AutomatedScript.Pages
         {
             try
             {
-                wait.Until(ExpectedConditions.TextToBePresentInElement(CartItemsCount, "1"));
+                wait.Until(d =>
+                {
+                    try
+                    {
+                        var el = d.FindElement(By.Id("nav-cart-count-container"));
+                        return el != null && el.Text != null && el.Text.Contains("1");
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        return false;
+                    }
+                });
                 return true;
             }
-            catch (NoSuchElementException)
+            catch (WebDriverTimeoutException)
             {
                 return false;
             }
