@@ -1,93 +1,24 @@
-name: CI - Windows .NET Framework Tests
-
-on:
-  push:
-    paths:
-      - '**/*.cs'
-      - '**/*.sln'
-      - '.github/workflows/**'
-  pull_request:
+name: Selenium NUnit Tests
+on: [push, pull_request]
 
 jobs:
-  build-and-test:
-    runs-on: windows-latest
+  test:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: Setup NuGet
-        uses: nuget/setup-nuget@v1
-
-      - name: Restore NuGet packages
-        run: nuget restore AutomatedScript.sln
-
-      - name: Setup MSBuild tools
-        uses: microsoft/setup-msbuild@v1
-
-      - name: Build solution (Release) and emit to artifacts folder
-        run: msbuild AutomatedScript.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutDir="$(pwd)\\artifacts\\" /m
-
-      - name: Install Microsoft.TestPlatform (vstest.console.exe) via NuGet (no version folder)
-        run: nuget install Microsoft.TestPlatform -OutputDirectory testrunner -ExcludeVersion
-
-      - name: Locate and run vstest.console.exe (robust search)
-        shell: powershell
-        run: |
-          Write-Host "Searching for vstest.console.exe in 'testrunner' and common Visual Studio locations..."
-          $vstest = Get-ChildItem -Path testrunner -Filter vstest.console.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
-
-          if (-not $vstest) {
-            $possible = Join-Path (Join-Path $PWD "testrunner\Microsoft.TestPlatform\tools") "net462\Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
-            $possible2 = Join-Path (Join-Path $PWD "testrunner\Microsoft.TestPlatform\tools") "net451\vstest.console.exe"
-            if (Test-Path $possible) { $vstest = $possible }
-            elseif (Test-Path $possible2) { $vstest = $possible2 }
-            else {
-              $vswhere = Join-Path "${env:ProgramFiles(x86)}" "Microsoft Visual Studio\Installer\vswhere.exe"
-              if (Test-Path $vswhere) {
-                $vsPath = & $vswhere -latest -products * -property installationPath
-                if ($vsPath) {
-                  $candidates = @(
-                    Join-Path $vsPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe",
-                    Join-Path $vsPath "Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
-                  )
-                  foreach ($c in $candidates) { if (Test-Path $c) { $vstest = $c; break } }
-                }
-              }
-            }
-          }
-
-          if (-not $vstest) {
-            Write-Error "vstest.console.exe not found on runner."
-            exit 1
-          }
-
-          Write-Host "vstest found at: $vstest"
-
-          # Find test assembly produced by build. Prefer artifacts folder, then bin\Release, then bin\Debug.
-          $candidates = @()
-          $candidates += Get-ChildItem -Path $PWD -Recurse -Filter 'AutomatedScript.dll' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
-          $testDll = $candidates | Where-Object { $_ -match '\\artifacts\\' } | Select-Object -First 1
-          if (-not $testDll) { $testDll = $candidates | Where-Object { $_ -match '\\bin\\Release\\' } | Select-Object -First 1 }
-          if (-not $testDll) { $testDll = $candidates | Where-Object { $_ -match '\\bin\\Debug\\' } | Select-Object -First 1 }
-
-          if (-not $testDll) {
-            Write-Host "No matching AutomatedScript.dll found in artifacts or bin folders. Listing root folders for debugging:"
-            Get-ChildItem -Path $PWD -Directory | Select-Object Name | Write-Host
-            Write-Error "Test assembly not found in expected output paths."
-            exit 1
-          }
-
-          Write-Host "Using test assembly: $testDll"
-
-          $resultsDir = "TestResults"
-          New-Item -ItemType Directory -Path $resultsDir -Force | Out-Null
-          $trx = Join-Path $resultsDir "results.trx"
-
-          & $vstest $testDll /EnableConsoleLogger /Logger:trx;LogFileName=$trx
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          name: test-results
-          path: TestResults
+          dotnet-version: '9.0.x'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Ejecutar solo un método específico
+      - name: Run FirstTestCase
+        run: dotnet test --filter FullyQualifiedName~AutomatedScript.Tests.AmazonTestCases.FirstTestCase
