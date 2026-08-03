@@ -3,6 +3,7 @@ using NUnit.Framework;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium
 
 namespace AutomatedScript.Framework
 {
@@ -13,7 +14,7 @@ namespace AutomatedScript.Framework
         private WebDriverWait _wait;
 
         [SetUp]
-        public virtual void TestInit()
+        public void TestInit()
         {
             _driver = Driver;
             _wait = Wait;
@@ -22,8 +23,33 @@ namespace AutomatedScript.Framework
         [TearDown]
         public void TestCleanup()
         {
-            _driver.Quit();
-            _driver.Dispose();
+            if (_driver != null)
+            {
+                try
+                {
+                    _driver.Quit();
+                }
+                catch (WebDriverException)
+                {
+                    // swallow exception thrown if driver process is already gone
+                }
+                catch (InvalidOperationException)
+                {
+                    // driver already disposed or session ended
+                }
+                finally
+                {
+                    try
+                    {
+                        _driver.Dispose();
+                    }
+                    catch { }
+                    _driver = null;
+                }
+            }
+
+            // Clear the wait so next test will recreate it against a fresh driver
+            _wait = null;
         }
 
         public RemoteWebDriver Driver
