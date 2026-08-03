@@ -19,5 +19,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Run NUnit Selenium tests
-        run: dotnet test --logger "console;verbosity=detailed"
+      # Ejecutar solo un método específico
+      - name: Run FirstTestCase
+        run: dotnet test --filter FullyQualifiedName~AutomatedScript.Tests.AmazonTestCases.FirstTestCase
