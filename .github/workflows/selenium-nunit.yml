@@ -1,24 +1,83 @@
 name: Selenium NUnit Tests
-on: [push, pull_request]
+
+on:
+  push:
+    paths:
+      - '**/*.cs'
+      - '**/*.sln'
+      - '.github/workflows/**'
+  pull_request:
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  build-and-test:
+    runs-on: windows-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v1
+
+      - name: Restore NuGet packages
+        run: nuget restore AutomatedScript.sln
+
+      - name: Setup MSBuild tools
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Build solution (Release)
+        run: msbuild AutomatedScript.sln /p:Configuration=Release /m
+
+      - name: Run tests with vstest.console.exe
+        shell: powershell
+        run: |
+          Write-Host "Locating vstest.console.exe using vswhere..."
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          if (-Not (Test-Path $vswhere)) {
+            Write-Error "vswhere.exe not found at $vswhere"
+            exit 1
+          }
+
+          $vsPath = & $vswhere -latest -products * -requires Microsoft.Component.TestTools.Build -property installationPath
+          if (-not $vsPath) {
+            Write-Host "vswhere did not return installationPath; attempting to find Visual Studio folder..."
+            $vsPath = Get-ChildItem 'C:\Program Files (x86)\Microsoft Visual Studio' -Directory | Select-Object -First 1 -ExpandProperty FullName
+          }
+
+          $vstest = Join-Path $vsPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+          if (-not (Test-Path $vstest)) {
+            $vstest = Join-Path $vsPath "Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
+          }
+          if (-not (Test-Path $vstest)) {
+            $vstest = Get-ChildItem -Path "C:\Program Files (x86)\Microsoft Visual Studio" -Filter vstest.console.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+          }
+
+          if (-not $vstest) {
+            Write-Error "vstest.console.exe not found on runner."
+            exit 1
+          }
+
+          Write-Host "vstest found at: $vstest"
+
+          # Prefer Release build artifact, fall back to Debug
+          $testDll = "AutomatedScript\bin\Release\AutomatedScript.dll"
+          if (-not (Test-Path $testDll)) {
+            $testDll = "AutomatedScript\bin\Debug\AutomatedScript.dll"
+            if (-not (Test-Path $testDll)) {
+              Write-Error "Test assembly not found in expected output paths."
+              exit 1
+            }
+          }
+
+          # Create TestResults folder to store trx file
+          $resultsDir = "TestResults"
+          New-Item -ItemType Directory -Path $resultsDir -Force | Out-Null
+          $trx = Join-Path $resultsDir "results.trx"
+
+          & $vstest $testDll /EnableConsoleLogger /Logger:trx;LogFileName=$trx
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          dotnet-version: '9.0.x'
-
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@latest
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      # Ejecutar solo un método específico
-      - name: Run FirstTestCase
-        run: dotnet test --filter FullyQualifiedName~AutomatedScript.Tests.AmazonTestCases.FirstTestCase
+          name: test-results
+          path: TestResults
