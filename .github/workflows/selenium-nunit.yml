@@ -27,28 +27,30 @@ jobs:
       - name: Build solution (Release)
         run: msbuild AutomatedScript.sln /p:Configuration=Release /m
 
+      - name: Install Microsoft.TestPlatform (vstest.console.exe) via NuGet
+        run: nuget install Microsoft.TestPlatform -OutputDirectory testrunner
+
       - name: Run tests with vstest.console.exe
         shell: powershell
         run: |
-          Write-Host "Locating vstest.console.exe using vswhere..."
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          if (-Not (Test-Path $vswhere)) {
-            Write-Error "vswhere.exe not found at $vswhere"
-            exit 1
-          }
+          Write-Host "Locating vstest.console.exe..."
+          $vstest = Get-ChildItem -Path testrunner -Filter vstest.console.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
 
-          $vsPath = & $vswhere -latest -products * -requires Microsoft.Component.TestTools.Build -property installationPath
-          if (-not $vsPath) {
-            Write-Host "vswhere did not return installationPath; attempting to find Visual Studio folder..."
-            $vsPath = Get-ChildItem 'C:\Program Files (x86)\Microsoft Visual Studio' -Directory | Select-Object -First 1 -ExpandProperty FullName
-          }
-
-          $vstest = Join-Path $vsPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-          if (-not (Test-Path $vstest)) {
-            $vstest = Join-Path $vsPath "Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
-          }
-          if (-not (Test-Path $vstest)) {
-            $vstest = Get-ChildItem -Path "C:\Program Files (x86)\Microsoft Visual Studio" -Filter vstest.console.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+          if (-not $vstest) {
+            Write-Host "vstest.console.exe not found in testrunner; searching common Visual Studio locations..."
+            $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+            if (Test-Path $vswhere) {
+              $vsPath = & $vswhere -latest -products * -requires Microsoft.Component.TestTools.Build -property installationPath
+              $candidatePaths = @()
+              if ($vsPath) { $candidatePaths += $vsPath }
+              $candidatePaths += Get-ChildItem 'C:\Program Files (x86)\Microsoft Visual Studio' -Directory | ForEach-Object { $_.FullName }
+              foreach ($p in $candidatePaths) {
+                $possible = Join-Path $p "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+                if (Test-Path $possible) { $vstest = $possible; break }
+                $possible2 = Join-Path $p "Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
+                if (Test-Path $possible2) { $vstest = $possible2; break }
+              }
+            }
           }
 
           if (-not $vstest) {
@@ -68,7 +70,6 @@ jobs:
             }
           }
 
-          # Create TestResults folder to store trx file
           $resultsDir = "TestResults"
           New-Item -ItemType Directory -Path $resultsDir -Force | Out-Null
           $trx = Join-Path $resultsDir "results.trx"
