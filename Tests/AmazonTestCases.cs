@@ -6,21 +6,39 @@ namespace AutomatedScript.Tests
     [TestFixture]
     public class AmazonTestCases : TestInitialize
     {
+
         /// <summary>
-        /// First Test Case:
-        /// 1.- Go to Amazon.com
-        /// 2.- Search for Samsung Galaxy Note 20
-        /// 3.- Verify Item is displayed on the screen and locate the first one, then store the price
-        /// 4.- Click on the First Result
-        /// 5.- Once in the details page compare this price vs the above one(first stored price)
-        /// 6.- Click on Add to Cart
-        /// 7.- Go to Cart and verify again the price of the phone
-        /// 8.- Delete Item
+        /// End-to-end UI test validating search, product detail, and cart add/remove operations
+        /// for a targeted item ("Xbox Series X 1TB").
         /// </summary>
+        /// <remarks>
+        /// Test flow:
+        /// 1. Navigate to Amazon home page.
+        /// 2. Search for the product specified by <c>itemName</c>.
+        /// 3. Verify the browser title contains the search term.
+        /// 4. Capture the price of the first item shown in search results.
+        /// 5. Open the product detail page for that item and capture the detail price.
+        /// 6. Assert the search result price and detail page price are equal.
+        /// 7. If the product was added to cart (verified via <c>VerifyCartCounter</c>):
+        ///    a. Open the cart and capture the cart subtotal.
+        ///    b. Assert the cart subtotal equals the previously captured price.
+        ///    c. Remove the item from the cart and verify the cart is empty.
+        /// 8. If the cart counter was not incremented, the test fails.
+        ///
+        /// Preconditions:
+        /// - A valid WebDriver instance is available via the base class <c>TestInitialize</c>.
+        /// - The test requires network access to https://www.amazon.com/.
+        /// - Page object classes <c>Home</c>, <c>SearchFor</c>, <c>DetailProduct</c>, and <c>Cart</c> encapsulate UI interactions.
+        ///
+        /// Assertions and failure conditions:
+        /// - Title must contain the search term.
+        /// - Prices must match across search, detail and cart contexts.
+        /// - Cart must be emptied successfully after deletion.
+        /// </remarks>
         [Test]
         public void FirstTestCase()
         {
-            string itemName = "Samsung Galaxy Note 20";
+            string itemName = "Xbox Series X 1TB";
 
             Driver.Navigate().GoToUrl("https://www.amazon.com/");
             Home homeWebPage = new Home(Driver, Wait);
@@ -58,20 +76,36 @@ namespace AutomatedScript.Tests
         }
 
         /// <summary>
-        /// Second Test Case:
-        /// 1.- Go to Amazon.com
-        /// 2.- Search for Samsung Galaxy S20 FE 5G
-        /// 3.- Verify Item is displayed on the screen and locate the first one, then store the price
-        /// 4.- Click on the First Result
-        /// 5.- Once in the details page compare this price vs the above one
-        /// 6.- Click on Add to Cart
-        /// 7.- Go to Cart and verify again the price of the phone
-        /// 8.- Delete Item
+        /// End-to-end UI test that validates search, product detail, cart add/remove operations for a targeted item.
         /// </summary>
+        /// <remarks>
+        /// Test flow:
+        /// 1. Navigate to Amazon home page.
+        /// 2. Search for the product specified by <c>itemName</c>.
+        /// 3. Verify the browser title contains the search term.
+        /// 4. Capture the price of the first item shown in search results.
+        /// 5. Open the product detail page for that item and capture the detail price.
+        /// 6. Assert the search result price and detail page price are equal.
+        /// 7. If the product was added to cart (verified via <c>VerifyCartCounter</c>):
+        ///    a. Open the cart and capture the cart subtotal.
+        ///    b. Assert the cart subtotal equals the previously captured price.
+        ///    c. Remove the item from the cart and verify the cart is empty.
+        /// 8. If the cart counter was not incremented, the test fails.
+        ///
+        /// Preconditions:
+        /// - A valid WebDriver instance is available via the base class <c>TestInitialize</c>.
+        /// - The test requires network access to https://www.amazon.com/.
+        /// - Page object classes <c>Home</c>, <c>SearchFor</c>, <c>DetailProduct</c>, and <c>Cart</c> encapsulate UI interactions.
+        ///
+        /// Assertions and failure conditions produce meaningful messages to ease debugging:
+        /// - Title must contain the search term.
+        /// - Prices must match across search, detail and cart contexts.
+        /// - Cart must be emptied successfully after deletion.
+        /// </remarks>
         [Test]
         public void SecondTestCase()
         {
-            string itemName = "Samsung Galaxy S20 FE 5G";
+            string itemName = "Play Station 5";
 
             Driver.Navigate().GoToUrl("https://www.amazon.com/");
             Home homeWebPage = new Home(Driver, Wait);
