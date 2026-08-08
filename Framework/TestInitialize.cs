@@ -10,7 +10,7 @@ namespace AutomatedScript.Framework
     [TestFixture]
     public class TestInitialize
     {
-        private RemoteWebDriver _driver;
+        private IWebDriver _driver;
         private WebDriverWait _wait;
 
         [SetUp]
