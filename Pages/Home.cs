@@ -1,16 +1,15 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 
 namespace AutomatedScript.Pages
 {
     public class Home
     {
-        private RemoteWebDriver driver;
+        private IWebDriver driver;
         private WebDriverWait wait;
 
-        public Home(RemoteWebDriver Driver, WebDriverWait Wait)
+        public Home(IWebDriver Driver, WebDriverWait Wait)
         {
             driver = Driver;
             wait = Wait;

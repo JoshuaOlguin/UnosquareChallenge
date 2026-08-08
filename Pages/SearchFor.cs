@@ -8,10 +8,10 @@ namespace AutomatedScript.Pages
 {
     public class SearchFor
     {
-        private RemoteWebDriver driver;
+        private IWebDriver driver;
         private WebDriverWait wait;
 
-        public SearchFor(RemoteWebDriver Driver, WebDriverWait Wait)
+        public SearchFor(IWebDriver Driver, WebDriverWait Wait)
         {
             driver = Driver;
             wait = Wait;
