@@ -1,0 +1,52 @@
+name: Run Selenium + NUnit Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: windows-latest  # Usamos Windows para compatibilidad con navegadores
+
+    steps:
+      # 1. Descargar el código
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Instalar .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # Cambia según tu versión
+
+      # 3. Restaurar dependencias
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 4. Compilar el proyecto
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      # 5. Instalar Chrome y ChromeDriver (para Selenium)
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: latest
+
+      # 6. Ejecutar pruebas NUnit
+      - name: Run NUnit Tests
+        run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"
+
+      # 7. Publicar resultados de pruebas
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: NUnit-Test-Results
+          path: '**/TestResults/*.trx'
