@@ -9,18 +9,18 @@ namespace AutomatedScript.Pages
 {
     public class Cart
     {
-        private RemoteWebDriver driver;
+        private IWebDriver driver;
         private WebDriverWait wait;
 
-        public Cart(RemoteWebDriver Driver, WebDriverWait Wait)
+        public Cart(IWebDriver Driver, WebDriverWait Wait)
         {
             driver = Driver;
             wait = Wait;
         }
-
-        public IWebElement ProceedToCheckoutButton => wait.Until(d => driver.FindElementById("proceed-to-checkout-action")).Displayed ? driver.FindElementById("proceed-to-checkout-action") : null;
-        public IWebElement CartSubtotal => wait.Until(d => driver.FindElementById("sc-subtotal-amount-buybox")).Displayed ? driver.FindElementById("sc-subtotal-amount-buybox") : null;
-        public IList<IWebElement> LinkButtons => driver.FindElements(By.CssSelector("input.a-color-link"));
+        
+        public IWebElement ProceedToCheckoutButton => wait.Until(d => driver.FindElement(By.Id("proceed-to-checkout-action")).Displayed ? driver.FindElement(By.Id("proceed-to-checkout-action")) : null);
+        public IWebElement CartSubtotal => wait.Until(d => driver.FindElement(By.Id("sc-subtotal-amount-buybox")).Displayed ? driver.FindElement(By.Id("sc-subtotal-amount-buybox")) : null);
+        public IList<IWebElement> LinkButtons => wait.Until(d => driver.FindElements(By.CssSelector("input.a-color-link")).Count > 0 ? driver.FindElements(By.CssSelector("input.a-color-link")) : null);
 
         public IWebElement EmptyCartMessage;
 
@@ -28,7 +28,7 @@ namespace AutomatedScript.Pages
         {
             try
             {
-                EmptyCartMessage = wait.Until(d => driver.FindElementByCssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")).Displayed ? driver.FindElementByCssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']") : null;
+                EmptyCartMessage = wait.Until(d => driver.FindElement(By.CssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")).Displayed ? driver.FindElement(By.CssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")) : null);
                 return EmptyCartMessage != null ? EmptyCartMessage.Displayed : false;
             }
             catch (NoSuchElementException)

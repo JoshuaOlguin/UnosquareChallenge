@@ -1,7 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
 
@@ -52,7 +51,7 @@ namespace AutomatedScript.Framework
             _wait = null;
         }
 
-        public RemoteWebDriver Driver
+        public IWebDriver Driver
         {
             get
             {

@@ -8,10 +8,10 @@ namespace AutomatedScript.Pages
 {
     public class DetailProduct
     {
-        private RemoteWebDriver driver;
+        private IWebDriver driver;
         private WebDriverWait wait;
 
-        public DetailProduct(RemoteWebDriver Driver, WebDriverWait Wait)
+        public DetailProduct(IWebDriver Driver, WebDriverWait Wait)
         {
             driver = Driver;
             wait = Wait;
