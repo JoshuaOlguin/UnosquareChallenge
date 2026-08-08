@@ -35,10 +35,16 @@ namespace AutomatedScript.Utilities
 
             return physicalPath;
         }
+
         public string GetPhysicalPathByRelative(string relativePath, int skips)
         {
             var physicalPath = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
-            physicalPath = String.Join(@"\", physicalPath.Split('\\').Reverse().Skip(skips).Reverse());
+
+            // Skip from the end by taking all elements except the last 'skips' elements
+            var pathSegments = physicalPath.Split('\\');
+            var trimmedSegments = pathSegments.Take(pathSegments.Length - skips);
+            physicalPath = String.Join(@"\", trimmedSegments);
+
             physicalPath = physicalPath + '\\' + relativePath;
 
             return physicalPath;
