@@ -141,5 +141,6 @@ namespace AutomatedScript.Tests
                 Assert.Fail("Product is not added to shopping cart.");
             }
         }
+
     }
 }
