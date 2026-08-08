@@ -31,11 +31,11 @@ namespace AutomatedScript.Framework
                 }
                 catch (WebDriverException)
                 {
-                    // swallow exception thrown if driver process is already gone
+                    Console.WriteLine("Swallow exception thrown if driver process is already gone");
                 }
                 catch (InvalidOperationException)
                 {
-                    // driver already disposed or session ended
+                    Console.WriteLine("Swallow exception thrown if driver is already disposed or session ended");
                 }
                 finally
                 {
