@@ -105,7 +105,7 @@ namespace AutomatedScript.Tests
         [Test]
         public void SecondTestCase()
         {
-            string itemName = "Play Station 5";
+            string itemName = "PlayStation 5 Disc Edition Console";
 
             Driver.Navigate().GoToUrl("https://www.amazon.com/");
             Home homeWebPage = new Home(Driver, Wait);
