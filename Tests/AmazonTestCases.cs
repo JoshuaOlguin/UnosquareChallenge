@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
+using Assert = NUnit.Framework.Assert;
 using AutomatedScript.Framework;
 using AutomatedScript.Pages;
+
 namespace AutomatedScript.Tests
 {
     [TestFixture]
