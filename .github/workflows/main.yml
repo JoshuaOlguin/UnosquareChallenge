@@ -22,15 +22,12 @@ jobs:
     - name: Build Solution
       run: dotnet build AutomatedScript.sln --configuration Release
 
-    - name: Install NUnit Console
-      run: nuget install NUnit.ConsoleRunner -OutputDirectory packages
-
     - name: Run NUnit Tests
-      run: ./packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe "bin/Release/net8.0/AutomatedScript.Tests.dll" --result=TestResults.xml
+      run: dotnet test AutomatedScript.sln --configuration Release --logger "trx;LogFileName=TestResults.trx"
 
     - name: Upload Test Results
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: nunit-results
-        path: TestResults.xml
+        path: TestResults.trx
