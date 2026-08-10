@@ -1,5 +1,3 @@
-name: Run NUnit and Selemium Tests
-
 on:
   push:
     branches: [ Master, main ]
@@ -13,23 +11,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.1
-
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
     - name: Restore NuGet Packages
-      run: nuget restore AutomatedScript.sln
+      run: dotnet restore AutomatedScript.sln
 
     - name: Build Solution
-      run: msbuild AutomatedScript.sln /p:Configuration=Release
+      run: dotnet build AutomatedScript.sln --configuration Release
 
     - name: Install NUnit Console
       run: nuget install NUnit.ConsoleRunner -OutputDirectory packages
 
     - name: Run NUnit Tests
-      run: ./packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe "bin/Release/AutomatedScript.Tests.dll" --result=TestResults.xml
+      run: ./packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe "bin/Release/net8.0/AutomatedScript.Tests.dll" --result=TestResults.xml
 
     - name: Upload Test Results
       if: always()
