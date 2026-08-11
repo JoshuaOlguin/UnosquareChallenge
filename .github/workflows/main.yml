@@ -1,4 +1,4 @@
-name: Run NUnit and Selemium Tests
+name: Run NUnit and Selenium Tests
 
 on:
   push:
@@ -22,14 +22,14 @@ jobs:
       run: dotnet restore AutomatedScript.sln
 
     - name: Build Solution
-      run: dotnet build AutomatedScript.sln --configuration Release
+      run: dotnet build AutomatedScript.sln --configuration Release --no-restore
 
-    - name: Run NUnit Tests
-      run: dotnet test AutomatedScript.sln --configuration Release --logger "trx;LogFileName=TestResults.trx"
+    - name: Run NUnit and Selenium Tests
+      run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx"
 
     - name: Upload Test Results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: nunit-results
+        name: nunit-selenium-results
         path: TestResults.trx
