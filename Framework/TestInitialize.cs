@@ -57,7 +57,18 @@ namespace AutomatedScript.Framework
             {
                 if (_driver == null)
                 {
-                    _driver = new ChromeDriver();
+                    var options = new ChromeOptions();
+
+                    // Run Chrome in headless mode (new headless API)
+                    options.AddArgument("--headless=new");
+                    options.AddArgument("--disable-gpu");
+                    options.AddArgument("--window-size=1920,1080");
+
+                    // Optional: make CI more stable
+                    options.AddArgument("--no-sandbox");
+                    options.AddArgument("--disable-dev-shm-usage");
+
+                    _driver = new ChromeDriver(options);
                     _driver.Manage().Window.Maximize();
                 }
                 return _driver;
