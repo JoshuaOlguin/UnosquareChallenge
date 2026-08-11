@@ -1,3 +1,5 @@
+name: Run NUnit and Selemium Tests
+
 on:
   push:
     branches: [ Master, main ]
