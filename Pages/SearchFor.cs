@@ -30,9 +30,13 @@ namespace AutomatedScript.Pages
             item.FindElement(By.CssSelector("[class*='a-size-medium a-spacing-none a-color-base a-text-normal']")).Click();
         }
 
-        public decimal GetPriceOfFirstItemOfSearchResult()
+        public void SelectFirstAvailableItemOfSearchResult()
         {
             SelectedItem = GetFirstOrDefaultItemWithPrice(AvailableItems);
+        }
+
+        public decimal GetPriceOfFirstItemOfSearchResult()
+        {
             return  SetPriceOfFirstItemOfSearchResult(SelectedItem);
         }
 
