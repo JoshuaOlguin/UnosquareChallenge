@@ -58,9 +58,9 @@ namespace AutomatedScript.Tests
 
             DetailProduct DetailProductWebPage = new DetailProduct(Driver, Wait);
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
-            DetailProductWebPage.ClickOnFirstItemOfSearchResult();
-
             Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
+
+            DetailProductWebPage.AddToCartSelectedItem();
 
             if (DetailProductWebPage.VerifyCartCounter() == true)
             {
@@ -129,9 +129,9 @@ namespace AutomatedScript.Tests
 
             DetailProduct DetailProductWebPage = new DetailProduct(Driver, Wait);
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
-            DetailProductWebPage.ClickOnFirstItemOfSearchResult();
-
             Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
+
+            DetailProductWebPage.AddToCartSelectedItem();
 
             if (DetailProductWebPage.VerifyCartCounter() == true)
             {
