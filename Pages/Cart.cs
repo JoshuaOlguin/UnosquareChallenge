@@ -18,7 +18,7 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
         
-        public IWebElement ProceedToCheckoutButton => wait.Until(d => driver.FindElement(By.Id("proceed-to-checkout-action")));
+        public IWebElement ProceedToCheckoutButton;
         public IWebElement CartSubtotal => wait.Until(d => driver.FindElement(By.Id("sc-subtotal-amount-buybox")));
         public IList<IWebElement> LinkButtons => wait.Until(d => driver.FindElements(By.CssSelector("input.a-color-link")));
 
@@ -53,26 +53,8 @@ namespace AutomatedScript.Pages
 
         public bool ProceedToCheckoutButtonIsVisibleAndClickable()
         {
-            try
-            {
-                wait.Until(d =>
-                {
-                    try
-                    {
-                        var el = d.FindElement(By.Id("proceed-to-checkout-action"));
-                        return el != null && el.Displayed && el.Enabled;
-                    }
-                    catch (NoSuchElementException)
-                    {
-                        return false;
-                    }
-                });
-                return true;
-            }
-            catch (WebDriverTimeoutException)
-            {
-                return false;
-            }
+            ProceedToCheckoutButton = wait.Until(d => driver.FindElement(By.Id("proceed-to-checkout-action")));
+            return ProceedToCheckoutButton != null && ProceedToCheckoutButton.Displayed && ProceedToCheckoutButton.Enabled;
         }
 
         public decimal GetCartSubtotal()
