@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.IO;
 
 namespace AutomatedScript.Utilities
 {
@@ -38,7 +37,8 @@ namespace AutomatedScript.Utilities
 
         public string GetPhysicalPathByRelative(string relativePath, int skips)
         {
-            var physicalPath = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+            var assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            var physicalPath = Path.GetDirectoryName(assemblyLocation);
 
             // Skip from the end by taking all elements except the last 'skips' elements
             var pathSegments = physicalPath.Split('\\');

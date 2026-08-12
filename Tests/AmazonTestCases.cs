@@ -1,7 +1,8 @@
-﻿using NUnit.Framework;
-using Assert = NUnit.Framework.Assert;
-using AutomatedScript.Framework;
+﻿using AutomatedScript.Framework;
 using AutomatedScript.Pages;
+using NUnit.Framework;
+using OpenQA.Selenium.Support.UI;
+using Assert = NUnit.Framework.Assert;
 
 namespace AutomatedScript.Tests
 {
@@ -46,7 +47,9 @@ namespace AutomatedScript.Tests
             Home homeWebPage = new Home(Driver, Wait);
             homeWebPage.ContinueShopping();
             homeWebPage.SearchFor(itemName);
-            Assert.IsTrue(Driver.Title.Contains(itemName));
+
+            bool titleContainsItem = Wait.Until(d => d.Title.Contains(itemName));
+            Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
 
             SearchFor searchForWebPage = new SearchFor(Driver, Wait);
             var selectedProductPrice = searchForWebPage.GetPriceOfFirstItemOfSearchResult();
@@ -56,7 +59,7 @@ namespace AutomatedScript.Tests
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
             DetailProductWebPage.ClickOnFirstItemOfSearchResult();
 
-            Assert.AreEqual(selectedProductPrice, detailProductPrice);
+            Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
             if (DetailProductWebPage.VerifyCartCounter() == true)
             {
@@ -64,7 +67,7 @@ namespace AutomatedScript.Tests
                 Cart CartWebPage = new Cart(Driver, Wait);
                 var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
 
-                Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct);
+                Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
                 CartWebPage.ClickOnDeleteItemLink();
 
                 if (CartWebPage.VerifyEmptyCartOperation() == false)
@@ -114,7 +117,9 @@ namespace AutomatedScript.Tests
             Home homeWebPage = new Home(Driver, Wait);
             homeWebPage.ContinueShopping();
             homeWebPage.SearchFor(itemName);
-            Assert.IsTrue(Driver.Title.Contains(itemName));
+
+            bool titleContainsItem = Wait.Until(d => d.Title.Contains(itemName));
+            Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
 
             SearchFor searchForWebPage = new SearchFor(Driver, Wait);
             var selectedProductPrice = searchForWebPage.GetPriceOfFirstItemOfSearchResult();
@@ -124,7 +129,7 @@ namespace AutomatedScript.Tests
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
             DetailProductWebPage.ClickOnFirstItemOfSearchResult();
 
-            Assert.AreEqual(selectedProductPrice, detailProductPrice);
+            Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
             if (DetailProductWebPage.VerifyCartCounter() == true)
             {
@@ -132,7 +137,7 @@ namespace AutomatedScript.Tests
                 Cart CartWebPage = new Cart(Driver, Wait);
                 var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
 
-                Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct);
+                Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
                 CartWebPage.ClickOnDeleteItemLink();
 
                 if (CartWebPage.VerifyEmptyCartOperation() == false)

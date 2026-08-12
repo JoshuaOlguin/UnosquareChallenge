@@ -15,8 +15,8 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement SearchButton => wait.Until(d => driver.FindElement(By.Id("nav-search-submit-button")).Displayed? driver.FindElement(By.Id("nav-search-submit-button")) : null);
-        public IWebElement SearchTextBox => wait.Until(d => driver.FindElement(By.Id("twotabsearchtextbox")).Displayed? driver.FindElement(By.Id("twotabsearchtextbox")) : null);
+        public IWebElement SearchButton => wait.Until(d => driver.FindElement(By.Id("nav-search-submit-button")));
+        public IWebElement SearchTextBox => wait.Until(d => driver.FindElement(By.Id("twotabsearchtextbox")));
         public IWebElement ContinueShoppingButton;
 
         public void SearchFor(string inputParameter)
@@ -33,7 +33,7 @@ namespace AutomatedScript.Pages
 
         public void ContinueShopping() 
         {
-            try 
+            try
             {
                 ContinueShoppingButton = wait.Until(d => driver.FindElement(By.XPath("//button[@class='a-button-text' and text()='Continue shopping']")).Displayed ? driver.FindElement(By.XPath("//button[@class='a-button-text' and text()='Continue shopping']")) : null);
 
@@ -41,12 +41,8 @@ namespace AutomatedScript.Pages
                 {
                     ContinueShoppingButton.Click();
                 }
-            } 
-            catch (Exception ex)
-            {
-  
             }
-
+            catch {}
         }
     }
 }

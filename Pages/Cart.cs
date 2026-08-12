@@ -18,9 +18,9 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
         
-        public IWebElement ProceedToCheckoutButton => wait.Until(d => driver.FindElement(By.Id("proceed-to-checkout-action")).Displayed ? driver.FindElement(By.Id("proceed-to-checkout-action")) : null);
-        public IWebElement CartSubtotal => wait.Until(d => driver.FindElement(By.Id("sc-subtotal-amount-buybox")).Displayed ? driver.FindElement(By.Id("sc-subtotal-amount-buybox")) : null);
-        public IList<IWebElement> LinkButtons => wait.Until(d => driver.FindElements(By.CssSelector("input.a-color-link")).Count > 0 ? driver.FindElements(By.CssSelector("input.a-color-link")) : null);
+        public IWebElement ProceedToCheckoutButton => wait.Until(d => driver.FindElement(By.Id("proceed-to-checkout-action")));
+        public IWebElement CartSubtotal => wait.Until(d => driver.FindElement(By.Id("sc-subtotal-amount-buybox")));
+        public IList<IWebElement> LinkButtons => wait.Until(d => driver.FindElements(By.CssSelector("input.a-color-link")));
 
         public IWebElement EmptyCartMessage;
 
@@ -28,12 +28,11 @@ namespace AutomatedScript.Pages
         {
             try
             {
-                EmptyCartMessage = wait.Until(d => driver.FindElement(By.CssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")).Displayed ? driver.FindElement(By.CssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")) : null);
-                return EmptyCartMessage != null ? EmptyCartMessage.Displayed : false;
+                EmptyCartMessage = wait.Until(d => driver.FindElement(By.CssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")));
+                return EmptyCartMessage.Displayed;
             }
             catch (NoSuchElementException)
             {
-
                 return false;
             }
         }
@@ -41,6 +40,9 @@ namespace AutomatedScript.Pages
         public void ClickOnDeleteItemLink()
         {
             var deleteLink = LinkButtons.FirstOrDefault();
+            if (deleteLink == null)
+                throw new InvalidOperationException("No delete link found in cart to click.");
+
             deleteLink.Click();
         }
 

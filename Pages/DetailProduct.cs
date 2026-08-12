@@ -1,8 +1,5 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.Linq;
 
 namespace AutomatedScript.Pages
 {
@@ -17,10 +14,10 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.Id("add-to-cart-button")).Displayed? driver.FindElement(By.Id("add-to-cart-button")) : null);
-        public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='a-price aok-align-center apex-pricetopay-value']")).Displayed? driver.FindElement(By.CssSelector("[class*='a-price aok-align-center apex-pricetopay-value']")) : null);
-        public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")).Displayed ? driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")) : null);
-        public IWebElement CartItemsCount => wait.Until(d => driver.FindElement(By.Id("nav-cart-count-container")).Displayed ? driver.FindElement(By.Id("nav-cart-count-container")) : null);
+        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.Id("add-to-cart-button")));
+        public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='a-price aok-align-center apex-pricetopay-value']")));
+        public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")));
+        public IWebElement CartItemsCount => wait.Until(d => driver.FindElement(By.Id("nav-cart-count-container")));
         public bool VerifyCartCounter()
         {
             try
@@ -57,11 +54,9 @@ namespace AutomatedScript.Pages
 
         public decimal GetPriceOfProduct()
         {
-            string strPrice = PriceOfProduct.Text.Replace("MXN", string.Empty);
-            strPrice = strPrice.Replace("\r\n", ".");
+            string strPrice = PriceOfProduct.FindElement(By.ClassName("a-price-whole")).Text + "." + PriceOfProduct.FindElement(By.ClassName("a-price-fraction")).Text;
             decimal price;
             bool convt = decimal.TryParse(strPrice, out price);
-
             return convt == true ? price : 0;
         }
     }
