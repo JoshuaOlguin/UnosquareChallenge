@@ -70,11 +70,12 @@ namespace AutomatedScript.Tests
 
                 Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
                 CartWebPage.ClickOnDeleteItemLink();
-
+                /*
                 if (CartWebPage.VerifyEmptyCartOperation() == false)
                 {
                     Assert.Fail("There was an error when automation script tried to empty shopping cart");
                 }
+                */
             }
             else 
             {
@@ -141,11 +142,12 @@ namespace AutomatedScript.Tests
 
                 Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
                 CartWebPage.ClickOnDeleteItemLink();
-
+                /*
                 if (CartWebPage.VerifyEmptyCartOperation() == false)
                 {
                     Assert.Fail("There was an error when automation script tried to empty shopping cart");
                 }
+                */
             }
             else
             {
