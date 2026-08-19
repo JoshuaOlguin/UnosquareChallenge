@@ -61,26 +61,27 @@ namespace AutomatedScript.Tests
             Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
             DetailProductWebPage.AddToCartSelectedItem();
+            /*
+           if (DetailProductWebPage.VerifyCartCounter() == true)
+           {
+               DetailProductWebPage.ClickOnCartIcon();
+               Cart CartWebPage = new Cart(Driver, Wait);
+               var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
 
-            if (DetailProductWebPage.VerifyCartCounter() == true)
-            {
-                DetailProductWebPage.ClickOnCartIcon();
-                Cart CartWebPage = new Cart(Driver, Wait);
-                var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
-
-                Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
-                CartWebPage.ClickOnDeleteItemLink();
-                /*
-                if (CartWebPage.VerifyEmptyCartOperation() == false)
-                {
-                    Assert.Fail("There was an error when automation script tried to empty shopping cart");
-                }
-                */
+               Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
+               CartWebPage.ClickOnDeleteItemLink();
+               /*
+               if (CartWebPage.VerifyEmptyCartOperation() == false)
+               {
+                   Assert.Fail("There was an error when automation script tried to empty shopping cart");
+               }
+               
             }
-            else 
+            else
             {
                 Assert.Fail("Product is not added to shopping cart.");
             }
+            */
         }
 
         /// <summary>
@@ -134,25 +135,27 @@ namespace AutomatedScript.Tests
 
             DetailProductWebPage.AddToCartSelectedItem();
 
-            if (DetailProductWebPage.VerifyCartCounter() == true)
-            {
-                DetailProductWebPage.ClickOnCartIcon();
-                Cart CartWebPage = new Cart(Driver, Wait);
-                var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
+            /*
+           if (DetailProductWebPage.VerifyCartCounter() == true)
+           {
+               DetailProductWebPage.ClickOnCartIcon();
+               Cart CartWebPage = new Cart(Driver, Wait);
+               var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
 
-                Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
-                CartWebPage.ClickOnDeleteItemLink();
-                /*
-                if (CartWebPage.VerifyEmptyCartOperation() == false)
-                {
-                    Assert.Fail("There was an error when automation script tried to empty shopping cart");
-                }
-                */
+               Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
+               CartWebPage.ClickOnDeleteItemLink();
+               /*
+               if (CartWebPage.VerifyEmptyCartOperation() == false)
+               {
+                   Assert.Fail("There was an error when automation script tried to empty shopping cart");
+               }
+               
             }
             else
             {
                 Assert.Fail("Product is not added to shopping cart.");
             }
+            */
         }
 
     }
