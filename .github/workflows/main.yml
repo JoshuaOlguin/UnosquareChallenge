@@ -1,4 +1,4 @@
-name: Run NUnit and Selenium Tests
+name: Run NUnit and Selenium Tests and Test Result Visualization
 
 on:
   push:
