@@ -1,0 +1,53 @@
+name: Run Manually NUnit and Selenium Tests 
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Select branch to run tests on'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - Master
+          - develop
+          - feature-xyz
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branch }}
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore NuGet Packages
+      run: dotnet restore AutomatedScript.sln
+
+    - name: Build Solution
+      run: dotnet build AutomatedScript.sln --configuration Release --no-restore
+
+    - name: Run NUnit and Selenium Tests
+      run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx;OutputDirectory=TestResults"
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: nunit-selenium-results
+        path: TestResults/TestResults.trx
+
+    - name: Publish Test Results
+      if: always()
+      uses: dorny/test-reporter@v1
+      with:
+        name: NUnit and Selenium Tests
+        path: TestResults/TestResults.trx
+        reporter: dotnet-trx
