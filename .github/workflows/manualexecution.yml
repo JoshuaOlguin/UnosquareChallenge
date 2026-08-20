@@ -1,4 +1,4 @@
-name: Run NUnit and Selenium Tests
+name: Run Manually NUnit and Selenium Tests
 
 on:
   workflow_dispatch:
