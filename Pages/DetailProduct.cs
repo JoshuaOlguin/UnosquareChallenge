@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 
 namespace AutomatedScript.Pages
 {
@@ -8,13 +9,11 @@ namespace AutomatedScript.Pages
     {
         private IWebDriver driver;
         private WebDriverWait wait;
-        private readonly ILogger<DetailProduct> _logger;
 
         public DetailProduct(IWebDriver Driver, WebDriverWait Wait)
         {
             driver = Driver;
             wait = Wait;
-            _logger = new LoggerFactory().CreateLogger<DetailProduct>();
         }
 
         public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
@@ -23,17 +22,21 @@ namespace AutomatedScript.Pages
         public IWebElement CartItemsCount;
         public bool VerifyCartCounter()
         {
-            try 
+            CartItemsCount = wait.Until(d => driver.FindElement(By.CssSelector("span#nav-cart-count.nav-cart-count")));
+            if (CartItemsCount == null)
             {
-                CartItemsCount = wait.Until(d => driver.FindElement(By.XPath("//span[@id='nav-cart-count']")));
-                return CartItemsCount != null && CartItemsCount.Text != null && Convert.ToInt32(CartItemsCount.Text) > 0;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while publishing result. Exception: {ExceptionMessage}", ex.Message + CartItemsCount.Text);
+                Console.WriteLine("Cart items count element not found.");
                 return false;
             }
-            
+                
+
+            if (string.IsNullOrEmpty(CartItemsCount.Text))
+            {
+                Console.WriteLine("Cart items count is empty.");
+                return false;
+            }
+
+            return Convert.ToInt32(CartItemsCount.Text) > 0;
         }
 
         public void AddToCartSelectedItem()

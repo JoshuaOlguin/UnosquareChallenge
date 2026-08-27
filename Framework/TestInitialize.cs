@@ -60,7 +60,7 @@ namespace AutomatedScript.Framework
                     //TODO: Add Logic to configure the test driver based on the test configuration such as headless on CI/CD
                     //and run local displaying browser on local machine. For now, before running test locally,
                     //I have to comment the lines below to run the test locally and uncomment them to run on CI/CD pipeline.
-
+                    
                     var options = new ChromeOptions();
 
                     // Run Chrome in headless mode (new headless API)
@@ -74,11 +74,14 @@ namespace AutomatedScript.Framework
 
                     _driver = new ChromeDriver(options);
                     _driver.Manage().Window.Maximize();
-                    /*
-                    _driver = new ChromeDriver();
-                    _driver.Manage().Window.Maximize();
-                    */
                     
+                    /*
+                    var options = new ChromeOptions();
+                    options.AddArgument("--window-size=1920,1080");
+
+                    _driver = new ChromeDriver(options);
+                    //_driver.Manage().Window.Maximize();
+                    */
                 }
                 return _driver;
             }

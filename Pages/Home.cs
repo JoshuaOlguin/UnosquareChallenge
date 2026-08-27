@@ -35,9 +35,9 @@ namespace AutomatedScript.Pages
         {
             try
             {
-                ContinueShoppingButton = wait.Until(d => driver.FindElement(By.XPath("//button[@class='a-button-text' and text()='Continue shopping']")).Displayed ? driver.FindElement(By.XPath("//button[@class='a-button-text' and text()='Continue shopping']")) : null);
+                ContinueShoppingButton = wait.Until(d => driver.FindElement(By.XPath("//button[@class='a-button-text' and text()='Continue shopping']")));
 
-                if (ContinueShoppingButton != null)
+                if (ContinueShoppingButton.Displayed)
                 {
                     ContinueShoppingButton.Click();
                 }
