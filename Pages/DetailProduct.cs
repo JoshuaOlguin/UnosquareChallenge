@@ -16,32 +16,20 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
+        public IWebElement AddToCartButton; 
         public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='apex-pricetopay-value']")));
         public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")));
         public IWebElement CartItemsCount;
         public bool VerifyCartCounter()
         {
-            Console.WriteLine( $"Web page URL: { driver.Url.ToString() }");
-
             CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count")));
-
-            string CartItemsValueInnerText = CartItemsCount.GetAttribute("innerText"); ;
-            Console.WriteLine("Cart items count: " + CartItemsValueInnerText);
-
             return CartItemsCount != null && !string.IsNullOrEmpty(CartItemsCount.Text) && Convert.ToInt32(CartItemsCount.Text) > 0;
         }
 
         public void AddToCartSelectedItem()
         {
+            AddToCartButton = wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
             AddToCartButton.Click();
-
-            var addToCartConfirmationMessage = wait.Until(d => driver.FindElement(By.Id("add-to-cart-confirmation-image")));
-
-            if (addToCartConfirmationMessage.Displayed)
-            {
-                Console.WriteLine("Item added to cart successfully.");
-            }
         }
 
         public void ClickOnCartIcon()
