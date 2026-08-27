@@ -20,8 +20,8 @@ namespace AutomatedScript.Pages
         public IWebElement CartItemsCount;
         public bool VerifyCartCounter()
         {
-            CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count-container")));
-            return CartItemsCount != null && CartItemsCount.Text != null && CartItemsCount.Text.Contains("1");
+            CartItemsCount = wait.Until(d => driver.FindElement(By.XPath("//span[@id='nav-cart-count']")));
+            return CartItemsCount != null && CartItemsCount.Text != null && Convert.ToInt32(CartItemsCount.Text) > 0;
         }
 
         public void AddToCartSelectedItem()
