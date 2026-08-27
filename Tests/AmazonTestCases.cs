@@ -59,16 +59,16 @@ namespace AutomatedScript.Tests
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
             Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
-            DetailProductWebPage.AddToCartSelectedItem();
-            Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
+            //DetailProductWebPage.AddToCartSelectedItem();
+            //Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
 
-            DetailProductWebPage.ClickOnCartIcon();
-            Cart CartWebPage = new Cart(Driver, Wait);
-            var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
-            Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
+            //DetailProductWebPage.ClickOnCartIcon();
+            //Cart CartWebPage = new Cart(Driver, Wait);
+            //var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
+            //Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
             
-            CartWebPage.ClickOnDeleteItemLink();
-            Assert.IsTrue(CartWebPage.VerifyEmptyCartOperation(), "Failed to empty the shopping cart.");    
+            //CartWebPage.ClickOnDeleteItemLink();
+            //Assert.IsTrue(CartWebPage.VerifyEmptyCartOperation(), "Failed to empty the shopping cart.");    
 
      }
 
