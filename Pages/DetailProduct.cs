@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 
 namespace AutomatedScript.Pages
 {
@@ -14,18 +16,19 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.Id("add-to-cart-button")));
+        public IWebElement AddToCartButton; 
         public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='apex-pricetopay-value']")));
         public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")));
         public IWebElement CartItemsCount;
         public bool VerifyCartCounter()
         {
-            CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count-container")));
-            return CartItemsCount != null && CartItemsCount.Text != null && CartItemsCount.Text.Contains("1");
+            CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count")));
+            return CartItemsCount != null && !string.IsNullOrEmpty(CartItemsCount.Text) && Convert.ToInt32(CartItemsCount.Text) > 0;
         }
 
         public void AddToCartSelectedItem()
         {
+            AddToCartButton = wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
             AddToCartButton.Click();
         }
 
