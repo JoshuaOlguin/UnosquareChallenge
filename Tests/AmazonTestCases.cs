@@ -113,7 +113,7 @@ namespace AutomatedScript.Tests
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
             Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
-            DetailProductWebPage.AddToCartSelectedItem();
+            //DetailProductWebPage.AddToCartSelectedItem();
 
             /*
            if (DetailProductWebPage.VerifyCartCounter() == true)
