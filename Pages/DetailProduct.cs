@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using Microsoft.Extensions.Logging;
 
 namespace AutomatedScript.Pages
 {
@@ -7,11 +8,13 @@ namespace AutomatedScript.Pages
     {
         private IWebDriver driver;
         private WebDriverWait wait;
+        private readonly ILogger<DetailProduct> _logger;
 
         public DetailProduct(IWebDriver Driver, WebDriverWait Wait)
         {
             driver = Driver;
             wait = Wait;
+            _logger = new LoggerFactory().CreateLogger<DetailProduct>();
         }
 
         public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
@@ -20,8 +23,17 @@ namespace AutomatedScript.Pages
         public IWebElement CartItemsCount;
         public bool VerifyCartCounter()
         {
-            CartItemsCount = wait.Until(d => driver.FindElement(By.XPath("//span[@id='nav-cart-count']")));
-            return CartItemsCount != null && CartItemsCount.Text != null && Convert.ToInt32(CartItemsCount.Text) > 0;
+            try 
+            {
+                CartItemsCount = wait.Until(d => driver.FindElement(By.XPath("//span[@id='nav-cart-count']")));
+                return CartItemsCount != null && CartItemsCount.Text != null && Convert.ToInt32(CartItemsCount.Text) > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while publishing result. Exception: {ExceptionMessage}", ex.Message + CartItemsCount.Text);
+                return false;
+            }
+            
         }
 
         public void AddToCartSelectedItem()
