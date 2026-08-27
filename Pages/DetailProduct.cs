@@ -24,13 +24,16 @@ namespace AutomatedScript.Pages
         {
             Console.WriteLine( $"Web page URL: { driver.Url.ToString() }");
 
-            CartItemsCount = wait.Until(d => driver.FindElement(By.CssSelector("span#nav-cart-count.nav-cart-count")));
+            CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count")));
 
             // Get the text value inside the span
             string CartItemsValue = CartItemsCount.Text;
-
             Console.WriteLine("Cart items count: " + CartItemsValue);
-            return true;
+
+            string CartItemsValueInnerText = CartItemsCount.GetAttribute("innerText"); ;
+            Console.WriteLine("Cart items count: " + CartItemsValueInnerText);
+
+            return CartItemsCount != null && !string.IsNullOrEmpty(CartItemsCount.Text) && Convert.ToInt32(CartItemsCount.Text) > 0;
         }
 
         public void AddToCartSelectedItem()
