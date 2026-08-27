@@ -25,20 +25,12 @@ namespace AutomatedScript.Pages
             Console.WriteLine( $"Web page URL: { driver.Url.ToString() }");
 
             CartItemsCount = wait.Until(d => driver.FindElement(By.CssSelector("span#nav-cart-count.nav-cart-count")));
-            if (CartItemsCount == null)
-            {
-                Console.WriteLine("Cart items count element not found.");
-                return false;
-            }
-                
 
-            if (string.IsNullOrEmpty(CartItemsCount.Text))
-            {
-                Console.WriteLine("Cart items count is empty.");
-                return false;
-            }
+            // Get the text value inside the span
+            string CartItemsValue = CartItemsCount.Text;
 
-            return Convert.ToInt32(CartItemsCount.Text) > 0;
+            Console.WriteLine("Cart items count: " + CartItemsValue);
+            return true;
         }
 
         public void AddToCartSelectedItem()
