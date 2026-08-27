@@ -22,6 +22,8 @@ namespace AutomatedScript.Pages
         public IWebElement CartItemsCount;
         public bool VerifyCartCounter()
         {
+            Console.WriteLine( $"Web page URL: { driver.Url.ToString() }");
+
             CartItemsCount = wait.Until(d => driver.FindElement(By.CssSelector("span#nav-cart-count.nav-cart-count")));
             if (CartItemsCount == null)
             {
