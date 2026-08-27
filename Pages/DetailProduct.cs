@@ -14,7 +14,7 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.Id("add-to-cart-button")));
+        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
         public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='apex-pricetopay-value']")));
         public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")));
         public IWebElement CartItemsCount;
