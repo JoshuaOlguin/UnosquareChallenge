@@ -1,3 +1,11 @@
+name: Run NUnit and Selenium Tests and Test Result Visualization
+
+on:
+  push:
+    branches: [ Master, main ]
+  pull_request:
+    branches: [ Master, main ]
+
 jobs:
   test:
     runs-on: windows-latest
@@ -9,6 +17,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+    - name: Restore NuGet Packages
+      run: dotnet restore AutomatedScript.sln
 
     - name: Install Chrome
       run: choco install googlechrome --ignore-checksums -y
