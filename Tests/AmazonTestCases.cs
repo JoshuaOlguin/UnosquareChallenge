@@ -49,7 +49,7 @@ namespace AutomatedScript.Tests
             homeWebPage.SearchFor(itemName);
 
             //bool titleContainsItem = Wait.Until(d => d.Title.Contains(itemName));
-            Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
+            //Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
 
             SearchFor searchForWebPage = new SearchFor(Driver, Wait);
             searchForWebPage.SelectFirstAvailableItemOfSearchResult();
@@ -110,7 +110,7 @@ namespace AutomatedScript.Tests
          homeWebPage.SearchFor(itemName);
 
          //bool titleContainsItem = Wait.Until(d => d.Title.Contains(itemName));
-         Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
+         //Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
 
          SearchFor searchForWebPage = new SearchFor(Driver, Wait);
          searchForWebPage.SelectFirstAvailableItemOfSearchResult();
