@@ -18,13 +18,10 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Restore NuGet Packages
-      run: dotnet restore AutomatedScript.sln
-
     - name: Install Chrome
       run: choco install googlechrome --ignore-checksums -y
 
-    - name: Setup ChromeDriver
+    - name: Install ChromeDriver
       run: choco install chromedriver --ignore-checksums -y
 
     - name: Restore NuGet Packages
@@ -34,6 +31,8 @@ jobs:
       run: dotnet build AutomatedScript.sln --configuration Release --no-restore
 
     - name: Run NUnit and Selenium Tests
+      env:
+        CI: true   #This flag tells your C# code it's running in CI/CD
       run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx;OutputDirectory=TestResults"
 
     - name: Upload Test Results
