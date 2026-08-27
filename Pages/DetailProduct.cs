@@ -26,10 +26,6 @@ namespace AutomatedScript.Pages
 
             CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count")));
 
-            // Get the text value inside the span
-            string CartItemsValue = CartItemsCount.Text;
-            Console.WriteLine("Cart items count: " + CartItemsValue);
-
             string CartItemsValueInnerText = CartItemsCount.GetAttribute("innerText"); ;
             Console.WriteLine("Cart items count: " + CartItemsValueInnerText);
 
@@ -39,6 +35,13 @@ namespace AutomatedScript.Pages
         public void AddToCartSelectedItem()
         {
             AddToCartButton.Click();
+
+            var addToCartConfirmationMessage = wait.Until(d => driver.FindElement(By.Id("add-to-cart-confirmation-image")));
+
+            if (addToCartConfirmationMessage.Displayed)
+            {
+                Console.WriteLine("Item added to cart successfully.");
+            }
         }
 
         public void ClickOnCartIcon()
