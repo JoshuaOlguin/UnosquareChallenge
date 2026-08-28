@@ -32,7 +32,7 @@ namespace AutomatedScript.Framework
                     {
                         var screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
                         var fileName = $"{TestContext.CurrentContext.Test.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
-                        var screenshotsDir = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Screenshots");
+                        var screenshotsDir = Path.Combine("TestResults", "Screenshots");
                         Directory.CreateDirectory(screenshotsDir);
 
                         var filePath = Path.Combine(screenshotsDir, fileName);
