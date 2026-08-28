@@ -1,4 +1,3 @@
-name: Run NUnit and Selenium Tests and Test Result Visualization
 
 on:
   push:
@@ -31,7 +30,7 @@ jobs:
       run: dotnet build AutomatedScript.sln --configuration Release --no-restore
 
     - name: Run NUnit and Selenium Tests
-      continue-on-error: true   # permite continuar aunque haya fallos
+      continue-on-error: true   # allows workflow to continue even if tests fail
       env:
         CI: true
       run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx;OutputDirectory=TestResults"
@@ -58,6 +57,22 @@ jobs:
       with:
         name: selenium-screenshots
         path: ${{ github.workspace }}/TestResults/Screenshots
+
+    - name: Show Screenshots in Summary
+      if: always()
+      shell: pwsh
+      run: |
+        $summaryFile = "${{ github.step_summary }}"
+        if (Test-Path "${{ github.workspace }}\TestResults\Screenshots") {
+          $files = Get-ChildItem "${{ github.workspace }}\TestResults\Screenshots" -Filter *.png
+          foreach ($f in $files) {
+            echo "### Screenshot: $($f.Name)" >> $summaryFile
+            echo "![Screenshot](${{ github.workspace }}/TestResults/Screenshots/$($f.Name))" >> $summaryFile
+            echo "" >> $summaryFile
+          }
+        } else {
+          echo "No screenshots were generated." >> $summaryFile
+        }
 
     - name: Publish Test Results
       if: always()
