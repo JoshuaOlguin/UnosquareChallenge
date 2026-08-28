@@ -1,3 +1,4 @@
+name: Run NUnit and Selenium Tests and Test Result Visualization
 
 on:
   push:
@@ -63,16 +64,8 @@ jobs:
       shell: pwsh
       run: |
         $summaryFile = "${{ github.step_summary }}"
-        if (Test-Path "${{ github.workspace }}\TestResults\Screenshots") {
-          $files = Get-ChildItem "${{ github.workspace }}\TestResults\Screenshots" -Filter *.png
-          foreach ($f in $files) {
-            echo "### Screenshot: $($f.Name)" >> $summaryFile
-            echo "![Screenshot](${{ github.workspace }}/TestResults/Screenshots/$($f.Name))" >> $summaryFile
-            echo "" >> $summaryFile
-          }
-        } else {
-          echo "No screenshots were generated." >> $summaryFile
-        }
+        echo "## Screenshots" >> $summaryFile
+        echo "[Download screenshots here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)" >> $summaryFile
 
     - name: Publish Test Results
       if: always()
@@ -80,4 +73,4 @@ jobs:
       with:
         name: NUnit and Selenium Tests
         path: TestResults/TestResults.trx
-        reporter: dotnet-trx
+        reporter:
