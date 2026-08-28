@@ -24,7 +24,6 @@ namespace AutomatedScript.Framework
         {
             try
             {
-                // Capture screenshot if test failed
                 var outcome = TestContext.CurrentContext.Result.Outcome.Status;
                 if (outcome == NUnit.Framework.Interfaces.TestStatus.Failed && _driver != null)
                 {
@@ -32,16 +31,14 @@ namespace AutomatedScript.Framework
                     {
                         var screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
                         var fileName = $"{TestContext.CurrentContext.Test.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
-                        var screenshotsDir = Path.Combine("TestResults", "Screenshots");
+
+                        // Force screenshots into repo-root/TestResults/Screenshots
+                        var screenshotsDir = Path.Combine(TestContext.CurrentContext.WorkDirectory, "TestResults", "Screenshots");
                         Directory.CreateDirectory(screenshotsDir);
 
                         var filePath = Path.Combine(screenshotsDir, fileName);
-                        //screenshot.SaveAsFile(filePath, ScreenshotImageFormat.Png);
-
-                        // Save screenshot as PNG file
                         File.WriteAllBytes(filePath, screenshot.AsByteArray);
 
-                        // Attach screenshot to NUnit result file
                         TestContext.AddTestAttachment(filePath, "Failure screenshot");
                     }
                     catch (Exception ex)
@@ -78,8 +75,6 @@ namespace AutomatedScript.Framework
                         options.AddArgument("--disable-dev-shm-usage");
 
                         _driver = new ChromeDriver(options);
-
-                        // Simulate maximize in headless mode
                         _driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
                     }
                     else
