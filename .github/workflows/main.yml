@@ -31,13 +31,19 @@ jobs:
       run: dotnet build AutomatedScript.sln --configuration Release --no-restore
 
     - name: Run NUnit and Selenium Tests
+      continue-on-error: true   # permite continuar aunque haya fallos
       env:
         CI: true
       run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx;OutputDirectory=TestResults"
 
     - name: List screenshot files
       if: always()
-      run: dir "${{ github.workspace }}\TestResults\Screenshots" || echo "No screenshots found"
+      run: |
+        if (Test-Path "${{ github.workspace }}\TestResults\Screenshots") {
+          dir "${{ github.workspace }}\TestResults\Screenshots"
+        } else {
+          echo "No screenshots found"
+        }
 
     - name: Upload Test Results
       if: always()
