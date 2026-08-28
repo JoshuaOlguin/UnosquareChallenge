@@ -1,8 +1,8 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium;
+using System.IO;
 
 namespace AutomatedScript.Framework
 {
@@ -22,33 +22,44 @@ namespace AutomatedScript.Framework
         [TearDown]
         public void TestCleanup()
         {
-            if (_driver != null)
+            try
             {
-                try
-                {
-                    _driver.Quit();
-                }
-                catch (WebDriverException)
-                {
-                    Console.WriteLine("Swallow exception thrown if driver process is already gone");
-                }
-                catch (InvalidOperationException)
-                {
-                    Console.WriteLine("Swallow exception thrown if driver is already disposed or session ended");
-                }
-                finally
+                // Capture screenshot if test failed
+                var outcome = TestContext.CurrentContext.Result.Outcome.Status;
+                if (outcome == NUnit.Framework.Interfaces.TestStatus.Failed && _driver != null)
                 {
                     try
                     {
-                        _driver.Dispose();
+                        var screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
+                        var fileName = $"{TestContext.CurrentContext.Test.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+                        var screenshotsDir = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Screenshots");
+                        Directory.CreateDirectory(screenshotsDir);
+
+                        var filePath = Path.Combine(screenshotsDir, fileName);
+                        //screenshot.SaveAsFile(filePath, ScreenshotImageFormat.Png);
+
+                        // Save screenshot as PNG file
+                        File.WriteAllBytes(filePath, screenshot.AsByteArray);
+
+                        // Attach screenshot to NUnit result file
+                        TestContext.AddTestAttachment(filePath, "Failure screenshot");
                     }
-                    catch { }
-                    _driver = null;
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to capture screenshot: {ex.Message}");
+                    }
                 }
             }
-
-            // Clear the wait so next test will recreate it against a fresh driver
-            _wait = null;
+            finally
+            {
+                if (_driver != null)
+                {
+                    try { _driver.Quit(); } catch { }
+                    try { _driver.Dispose(); } catch { }
+                    _driver = null;
+                }
+                _wait = null;
+            }
         }
 
         public IWebDriver Driver
@@ -67,6 +78,9 @@ namespace AutomatedScript.Framework
                         options.AddArgument("--disable-dev-shm-usage");
 
                         _driver = new ChromeDriver(options);
+
+                        // Simulate maximize in headless mode
+                        _driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
                     }
                     else
                     {
