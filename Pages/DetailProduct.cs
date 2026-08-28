@@ -1,7 +1,5 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 
 namespace AutomatedScript.Pages
 {
@@ -20,6 +18,7 @@ namespace AutomatedScript.Pages
         public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='apex-pricetopay-value']")));
         public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")));
         public IWebElement CartItemsCount;
+        public IWebElement RefuseCoverageForAccidentalDamageButton;
         public bool VerifyCartCounter()
         {
             CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count")));
@@ -30,6 +29,16 @@ namespace AutomatedScript.Pages
         {
             AddToCartButton = wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
             AddToCartButton.Click();
+        }
+
+        public void RefuseCoverageForAccidentalDamageProduct()
+        {
+            RefuseCoverageForAccidentalDamageButton = wait.Until(d => driver.FindElement(By.XPath("//input[@class='a-button-input' and @aria-labelledby='attachSiNoCoverage-announce']")));
+
+            if (RefuseCoverageForAccidentalDamageButton.Displayed)
+            {
+                RefuseCoverageForAccidentalDamageButton.Click();
+            }
         }
 
         public void ClickOnCartIcon()

@@ -58,6 +58,7 @@ namespace AutomatedScript.Tests
             Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
             DetailProductWebPage.AddToCartSelectedItem();
+            DetailProductWebPage.RefuseCoverageForAccidentalDamageProduct();
             Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
 
             //DetailProductWebPage.ClickOnCartIcon();

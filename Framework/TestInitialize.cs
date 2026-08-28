@@ -97,7 +97,7 @@ namespace AutomatedScript.Framework
             {
                 if (_wait == null)
                 {
-                    _wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(30));
+                    _wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
                 }
                 return _wait;
             }
