@@ -59,18 +59,10 @@ jobs:
         name: selenium-screenshots
         path: ${{ github.workspace }}/TestResults/Screenshots
 
-    - name: Show Screenshots in Summary
-      if: always()
-      shell: pwsh
-      run: |
-        $summaryFile = "${{ github.step_summary }}"
-        echo "## Screenshots" >> $summaryFile
-        echo "[Download screenshots here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)" >> $summaryFile
-
     - name: Publish Test Results
       if: always()
       uses: dorny/test-reporter@v1
       with:
         name: NUnit and Selenium Tests
         path: TestResults/TestResults.trx
-        reporter: dotnet-trx
+        reporter:  dotnet-trx
