@@ -32,14 +32,17 @@ namespace AutomatedScript.Framework
                         var screenshot = ((ITakesScreenshot)_driver).GetScreenshot();
                         var fileName = $"{TestContext.CurrentContext.Test.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
 
-                        // Force screenshots into repo-root/TestResults/Screenshots
-                        var repoRoot = Directory.GetCurrentDirectory();
+                        // Use GitHub Actions workspace if available
+                        var repoRoot = Environment.GetEnvironmentVariable("GITHUB_WORKSPACE")
+                                       ?? TestContext.CurrentContext.WorkDirectory;
+
                         var screenshotsDir = Path.Combine(repoRoot, "TestResults", "Screenshots");
                         Directory.CreateDirectory(screenshotsDir);
 
                         var filePath = Path.Combine(screenshotsDir, fileName);
                         File.WriteAllBytes(filePath, screenshot.AsByteArray);
 
+                        Console.WriteLine($"Screenshot saved: {filePath}");
                         TestContext.AddTestAttachment(filePath, "Failure screenshot");
                     }
                     catch (Exception ex)
