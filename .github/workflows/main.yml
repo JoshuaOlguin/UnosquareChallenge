@@ -32,8 +32,12 @@ jobs:
 
     - name: Run NUnit and Selenium Tests
       env:
-        CI: true   #This flag tells your C# code it's running in CI/CD
+        CI: true
       run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx;OutputDirectory=TestResults"
+
+    - name: List screenshot files
+      if: always()
+      run: dir TestResults\Screenshots || echo "No screenshots found"
 
     - name: Upload Test Results
       if: always()
@@ -41,6 +45,13 @@ jobs:
       with:
         name: nunit-selenium-results
         path: TestResults/TestResults.trx
+
+    - name: Upload Screenshots
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: selenium-screenshots
+        path: TestResults/Screenshots
 
     - name: Publish Test Results
       if: always()
