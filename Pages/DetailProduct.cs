@@ -21,7 +21,7 @@ namespace AutomatedScript.Pages
         public IWebElement RefuseCoverageForAccidentalDamageButton;
         public bool VerifyCartCounter()
         {
-            CartItemsCount = wait.Until(d => driver.FindElement(By.Id("nav-cart-count")));
+            CartItemsCount = wait.Until(d => driver.FindElement(By.XPath("//div[@id='nav-cart-count-container']/span[@id='nav-cart-count']")));
             return CartItemsCount != null && !string.IsNullOrEmpty(CartItemsCount.Text) && Convert.ToInt32(CartItemsCount.Text) > 0;
         }
 
@@ -33,12 +33,16 @@ namespace AutomatedScript.Pages
 
         public void RefuseCoverageForAccidentalDamageProduct()
         {
-            RefuseCoverageForAccidentalDamageButton = wait.Until(d => driver.FindElement(By.XPath("//input[@class='a-button-input' and @aria-labelledby='attachSiNoCoverage-announce']")));
-
-            if (RefuseCoverageForAccidentalDamageButton.Displayed)
+            try 
             {
-                RefuseCoverageForAccidentalDamageButton.Click();
+                RefuseCoverageForAccidentalDamageButton = wait.Until(d => driver.FindElement(By.XPath("//input[@class='a-button-input' and @aria-labelledby='attachSiNoCoverage-announce']")));
+
+                if (RefuseCoverageForAccidentalDamageButton.Displayed)
+                {
+                    RefuseCoverageForAccidentalDamageButton.Click();
+                }
             }
+            catch { }
         }
 
         public void ClickOnCartIcon()
