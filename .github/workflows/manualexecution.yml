@@ -1,28 +1,33 @@
-name: Run NUnit and Selenium Tests and Test Result Visualization
+name: Run Manually NUnit and Selenium Tests
 
 on:
-  push:
-    branches: [ Master, main ]
-  pull_request:
-    branches: [ Master, main ]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Select branch to run tests on'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - Master
+          - Fixes_Branch
+          - develop
 
 jobs:
   test:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout selected branch
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branch }}
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-
-    - name: Install Chrome
-      run: choco install googlechrome --ignore-checksums -y
-
-    - name: Install ChromeDriver
-      run: choco install chromedriver --ignore-checksums -y
 
     - name: Restore NuGet Packages
       run: dotnet restore AutomatedScript.sln
@@ -31,8 +36,6 @@ jobs:
       run: dotnet build AutomatedScript.sln --configuration Release --no-restore
 
     - name: Run NUnit and Selenium Tests
-      env:
-        CI: true   #This flag tells your C# code it's running in CI/CD
       run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx;OutputDirectory=TestResults"
 
     - name: Upload Test Results
