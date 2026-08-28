@@ -59,4 +59,4 @@ jobs:
       with:
         name: NUnit and Selenium Tests
         path: TestResults/TestResults.trx
-        reporter: dotnet-trx
+        reporter: 
