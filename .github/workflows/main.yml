@@ -37,7 +37,7 @@ jobs:
 
     - name: List screenshot files
       if: always()
-      run: dir TestResults\Screenshots || echo "No screenshots found"
+      run: dir ${{ github.workspace }}\TestResults\Screenshots || echo "No screenshots found"
 
     - name: Upload Test Results
       if: always()
@@ -59,4 +59,4 @@ jobs:
       with:
         name: NUnit and Selenium Tests
         path: TestResults/TestResults.trx
-        reporter: dotnet-trx
+        reporter: 
