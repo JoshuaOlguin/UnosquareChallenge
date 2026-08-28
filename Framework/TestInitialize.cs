@@ -33,7 +33,8 @@ namespace AutomatedScript.Framework
                         var fileName = $"{TestContext.CurrentContext.Test.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
 
                         // Force screenshots into repo-root/TestResults/Screenshots
-                        var screenshotsDir = Path.Combine(TestContext.CurrentContext.WorkDirectory, "TestResults", "Screenshots");
+                        var repoRoot = Directory.GetCurrentDirectory();
+                        var screenshotsDir = Path.Combine(repoRoot, "TestResults", "Screenshots");
                         Directory.CreateDirectory(screenshotsDir);
 
                         var filePath = Path.Combine(screenshotsDir, fileName);
