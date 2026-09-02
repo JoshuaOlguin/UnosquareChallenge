@@ -59,8 +59,8 @@ namespace AutomatedScript.Tests
 
             DetailProductWebPage.AddToCartSelectedItem();
             DetailProductWebPage.RefuseCoverageForAccidentalDamageProduct();
-            Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
             DetailProductWebPage.ClickOnGoToCartButton();
+            Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
 
             //DetailProductWebPage.ClickOnCartIcon();
             //Cart CartWebPage = new Cart(Driver, Wait);
