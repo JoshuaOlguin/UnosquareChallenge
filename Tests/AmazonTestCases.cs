@@ -39,7 +39,7 @@ namespace AutomatedScript.Tests
         [Test]
         public void FirstTestCase()
         {
-            string itemName = "Xbox Series X 1TB";
+            string itemName = "Xbox Series X - All Digital Gaming Console - 1TB SSD - Includes Wireless Controller - 4K Gaming - 120FPS - Robot White";
 
             Driver.Navigate().GoToUrl("https://www.amazon.com/");
             Home homeWebPage = new Home(Driver, Wait);
@@ -60,6 +60,7 @@ namespace AutomatedScript.Tests
             DetailProductWebPage.AddToCartSelectedItem();
             DetailProductWebPage.RefuseCoverageForAccidentalDamageProduct();
             Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
+            DetailProductWebPage.ClickOnGoToCartButton();
 
             //DetailProductWebPage.ClickOnCartIcon();
             //Cart CartWebPage = new Cart(Driver, Wait);
