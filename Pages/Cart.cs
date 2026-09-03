@@ -17,18 +17,17 @@ namespace AutomatedScript.Pages
             driver = Driver;
             wait = Wait;
         }
-        
-        public IWebElement ProceedToCheckoutButton;
+
+        public IWebElement ProceedToCheckoutButton => wait.Until(d => driver.FindElement(By.Id("proceed-to-checkout-action")));
         public IWebElement CartSubtotal => wait.Until(d => driver.FindElement(By.Id("sc-subtotal-amount-buybox")));
         public IList<IWebElement> LinkButtons => wait.Until(d => driver.FindElements(By.CssSelector("input.a-color-link")));
 
-        public IWebElement EmptyCartMessage;
+        public IWebElement EmptyCartMessage => wait.Until(d => driver.FindElement(By.CssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")));
 
         public bool VerifyEmptyCartOperation()
         {
             try
             {
-                EmptyCartMessage = wait.Until(d => driver.FindElement(By.CssSelector("[class*='sc-list-item-removed-msg-delete a-padding-medium']")));
                 return EmptyCartMessage.Displayed;
             }
             catch (NoSuchElementException)
@@ -53,7 +52,6 @@ namespace AutomatedScript.Pages
 
         public bool ProceedToCheckoutButtonIsVisibleAndClickable()
         {
-            ProceedToCheckoutButton = wait.Until(d => driver.FindElement(By.Id("proceed-to-checkout-action")));
             return ProceedToCheckoutButton != null && ProceedToCheckoutButton.Displayed && ProceedToCheckoutButton.Enabled;
         }
 
