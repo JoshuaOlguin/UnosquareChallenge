@@ -7,37 +7,24 @@ namespace AutomatedScript.Tests
     [TestFixture]
     public class AmazonTestCases : TestInitialize
     {
-
+        
         /// <summary>
-        /// End-to-end UI test validating search, product detail, and cart add/remove operations
-        /// for a targeted item ("Xbox Series X 1TB").
+        /// Validates the end-to-end shopping workflow on Amazon, including search, product selection, price verification, cart operations, and item removal.
         /// </summary>
         /// <remarks>
-        /// Test flow:
-        /// 1. Navigate to Amazon home page.
-        /// 2. Search for the product specified by <c>itemName</c>.
-        /// 3. Verify the browser title contains the search term.
-        /// 4. Capture the price of the first item shown in search results.
-        /// 5. Open the product detail page for that item and capture the detail price.
-        /// 6. Assert the search result price and detail page price are equal.
-        /// 7. If the product was added to cart (verified via <c>VerifyCartCounter</c>):
-        ///    a. Open the cart and capture the cart subtotal.
-        ///    b. Assert the cart subtotal equals the previously captured price.
-        ///    c. Remove the item from the cart and verify the cart is empty.
-        /// 8. If the cart counter was not incremented, the test fails.
-        ///
-        /// Preconditions:
-        /// - A valid WebDriver instance is available via the base class <c>TestInitialize</c>.
-        /// - The test requires network access to https://www.amazon.com/.
-        /// - Page object classes <c>Home</c>, <c>SearchFor</c>, <c>DetailProduct</c>, and <c>Cart</c> encapsulate UI interactions.
-        ///
-        /// Assertions and failure conditions:
-        /// - Title must contain the search term.
-        /// - Prices must match across search, detail and cart contexts.
-        /// - Cart must be emptied successfully after deletion.
+        /// This test performs the following steps:
+        /// 1. Navigates to Amazon homepage and searches for "Xbox Series X 1TB"
+        /// 2. Verifies the search results page title contains the search term
+        /// 3. Retrieves the price of the first search result
+        /// 4. Navigates to the product detail page and verifies the price matches
+        /// 5. Adds the product to the shopping cart
+        /// 6. Verifies the cart counter is incremented
+        /// 7. Validates the cart subtotal matches the product price
+        /// 8. Removes the item from the cart
+        /// 9. Confirms the shopping cart is empty
         /// </remarks>
         [Test]
-        public void FirstTestCase()
+        public void ValidateEndToEndShoppingWorkflow_XboxSeriesX()
         {
             string itemName = "Xbox Series X 1TB";
 
@@ -53,75 +40,72 @@ namespace AutomatedScript.Tests
             searchForWebPage.SelectFirstAvailableItemOfSearchResult();
             var selectedProductPrice = searchForWebPage.GetPriceOfFirstItemOfSearchResult();
             searchForWebPage.ClickOnSelectedItem(searchForWebPage.SelectedItem);
+
             DetailProduct DetailProductWebPage = new DetailProduct(Driver, Wait);
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
             Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
             DetailProductWebPage.AddToCartSelectedItem();
             DetailProductWebPage.RefuseCoverageForAccidentalDamageProduct();
+            DetailProductWebPage.ClickOnGoToCartButton();
             Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
 
-            //DetailProductWebPage.ClickOnCartIcon();
-            //Cart CartWebPage = new Cart(Driver, Wait);
-            //var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
-            //Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
+            Cart CartWebPage = new Cart(Driver, Wait);
+            var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
+            Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
 
-            //CartWebPage.ClickOnDeleteItemLink();
-            //Assert.IsTrue(CartWebPage.VerifyEmptyCartOperation(), "Failed to empty the shopping cart.");
-
+            CartWebPage.ClickOnDeleteItemLink();
+            Assert.IsTrue(CartWebPage.VerifyEmptyCartOperation(), "Failed to empty the shopping cart.");
         }
 
-     /// <summary>
-     /// End-to-end UI test that validates search, product detail, cart add/remove operations for a targeted item.
-     /// </summary>
-     /// <remarks>
-     /// Test flow:
-     /// 1. Navigate to Amazon home page.
-     /// 2. Search for the product specified by <c>itemName</c>.
-     /// 3. Verify the browser title contains the search term.
-     /// 4. Capture the price of the first item shown in search results.
-     /// 5. Open the product detail page for that item and capture the detail price.
-     /// 6. Assert the search result price and detail page price are equal.
-     /// 7. If the product was added to cart (verified via <c>VerifyCartCounter</c>):
-     ///    a. Open the cart and capture the cart subtotal.
-     ///    b. Assert the cart subtotal equals the previously captured price.
-     ///    c. Remove the item from the cart and verify the cart is empty.
-     /// 8. If the cart counter was not incremented, the test fails.
-     ///
-     /// Preconditions:
-     /// - A valid WebDriver instance is available via the base class <c>TestInitialize</c>.
-     /// - The test requires network access to https://www.amazon.com/.
-     /// - Page object classes <c>Home</c>, <c>SearchFor</c>, <c>DetailProduct</c>, and <c>Cart</c> encapsulate UI interactions.
-     ///
-     /// Assertions and failure conditions produce meaningful messages to ease debugging:
-     /// - Title must contain the search term.
-     /// - Prices must match across search, detail and cart contexts.
-     /// - Cart must be emptied successfully after deletion.
-     /// </remarks>
-     [Test]
-     public void SecondTestCase()
+        /// <summary>
+        /// Validates the end-to-end shopping workflow on Amazon, including search, product selection, price verification, cart operations, and item removal.
+        /// </summary>
+        /// <remarks>
+        /// This test performs the following steps:
+        /// 1. Navigates to Amazon homepage and searches for "Xbox Series X 1TB"
+        /// 2. Verifies the search results page title contains the search term
+        /// 3. Retrieves the price of the first search result
+        /// 4. Navigates to the product detail page and verifies the price matches
+        /// 5. Adds the product to the shopping cart
+        /// 6. Verifies the cart counter is incremented
+        /// 7. Validates the cart subtotal matches the product price
+        /// 8. Removes the item from the cart
+        /// 9. Confirms the shopping cart is empty
+        /// </remarks>
+        [Test]
+     public void ValidateEndToEndShoppingWorkflow_PlayStation5()
      {
-         string itemName = "PlayStation 5 Disc Edition Console";
+            string itemName = "PlayStation 5 Disc Edition Console";
 
-         Driver.Navigate().GoToUrl("https://www.amazon.com/");
-         Home homeWebPage = new Home(Driver, Wait);
-         homeWebPage.ContinueShopping();
-         homeWebPage.SearchFor(itemName);
+            Driver.Navigate().GoToUrl("https://www.amazon.com/");
+            Home homeWebPage = new Home(Driver, Wait);
+            homeWebPage.ContinueShopping();
+            homeWebPage.SearchFor(itemName);
 
-         bool titleContainsItem = Wait.Until(d => d.Title.Contains(itemName));
-         Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
+            bool titleContainsItem = Wait.Until(d => d.Title.Contains(itemName));
+            Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
 
             SearchFor searchForWebPage = new SearchFor(Driver, Wait);
-         searchForWebPage.SelectFirstAvailableItemOfSearchResult();
-         var selectedProductPrice = searchForWebPage.GetPriceOfFirstItemOfSearchResult();
-         searchForWebPage.ClickOnSelectedItem(searchForWebPage.SelectedItem);
+            searchForWebPage.SelectFirstAvailableItemOfSearchResult();
+            var selectedProductPrice = searchForWebPage.GetPriceOfFirstItemOfSearchResult();
+            searchForWebPage.ClickOnSelectedItem(searchForWebPage.SelectedItem);
 
-         DetailProduct DetailProductWebPage = new DetailProduct(Driver, Wait);
-         var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
-         Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
+            DetailProduct DetailProductWebPage = new DetailProduct(Driver, Wait);
+            var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
+            Assert.AreEqual(selectedProductPrice, detailProductPrice, "Selected product price : " + selectedProductPrice + " does not match detail price: " + detailProductPrice);
 
-         DetailProductWebPage.AddToCartSelectedItem();
+            DetailProductWebPage.AddToCartSelectedItem();
+            DetailProductWebPage.RefuseCoverageForAccidentalDamageProduct();
+            DetailProductWebPage.ClickOnGoToCartButton();
+            Assert.IsTrue(DetailProductWebPage.VerifyCartCounter(), "Cart counter was not incremented.");
+
+            Cart CartWebPage = new Cart(Driver, Wait);
+            var cartDetailPriceOfProduct = CartWebPage.GetCartSubtotal();
+            Assert.AreEqual(selectedProductPrice, cartDetailPriceOfProduct, "Selected product price : " + selectedProductPrice + " does not match cart subtotal: " + cartDetailPriceOfProduct);
+
+            CartWebPage.ClickOnDeleteItemLink();
+            Assert.IsTrue(CartWebPage.VerifyEmptyCartOperation(), "Failed to empty the shopping cart.");
         }
-
     }
 }

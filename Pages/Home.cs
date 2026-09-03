@@ -17,7 +17,7 @@ namespace AutomatedScript.Pages
 
         public IWebElement SearchButton => wait.Until(d => driver.FindElement(By.Id("nav-search-submit-button")));
         public IWebElement SearchTextBox => wait.Until(d => driver.FindElement(By.Id("twotabsearchtextbox")));
-        public IWebElement ContinueShoppingButton;
+        public IWebElement ContinueShoppingButton => wait.Until(d => driver.FindElement(By.XPath("//button[@class='a-button-text' and text()='Continue shopping']")));
 
         public void SearchFor(string inputParameter)
         {
@@ -25,18 +25,10 @@ namespace AutomatedScript.Pages
             SearchButton.Click();
         }
 
-        public void MouseOverOnAccountOption()
-        {
-            Actions a = new Actions(driver);
-            a.MoveToElement(driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2   nav-progressive-attribute']"))).Build().Perform();
-        }
-
         public void ContinueShopping() 
         {
             try
             {
-                ContinueShoppingButton = wait.Until(d => driver.FindElement(By.XPath("//button[@class='a-button-text' and text()='Continue shopping']")));
-
                 if (ContinueShoppingButton.Displayed)
                 {
                     ContinueShoppingButton.Click();
