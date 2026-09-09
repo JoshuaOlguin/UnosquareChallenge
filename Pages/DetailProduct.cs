@@ -14,11 +14,11 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
-        public IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='apex-pricetopay-value']")));
-        public IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")));
-        public IWebElement GoToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("span.a-button.a-button-span11.a-button-base.a-button-small span.a-button-inner a.a-button-text")));
-        public IWebElement RefuseCoverageForAccidentalDamageButton => wait.Until(d => driver.FindElement(By.XPath("//input[@class='a-button-input' and @aria-labelledby='attachSiNoCoverage-announce']")));
+        private IWebElement AddToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("input#add-to-cart-button.a-button-input")));
+        private IWebElement PriceOfProduct => wait.Until(d => driver.FindElement(By.CssSelector("[class*='apex-pricetopay-value']")));
+        private IWebElement CartIconButton => wait.Until(d => driver.FindElement(By.CssSelector("[class*='nav-a nav-a-2 nav-progressive-attribute']")));
+        private IWebElement GoToCartButton => wait.Until(d => driver.FindElement(By.CssSelector("span.a-button.a-button-span11.a-button-base.a-button-small span.a-button-inner a.a-button-text")));
+        private IWebElement RefuseCoverageForAccidentalDamageButton => wait.Until(d => driver.FindElement(By.XPath("//input[@class='a-button-input' and @aria-labelledby='attachSiNoCoverage-announce']")));
 
         public void AddToCartSelectedItem()
         {
