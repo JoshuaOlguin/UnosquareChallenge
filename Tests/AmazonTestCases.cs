@@ -37,9 +37,9 @@ namespace AutomatedScript.Tests
             Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
 
             SearchFor searchForWebPage = new SearchFor(Driver, Wait);
-            searchForWebPage.SelectFirstAvailableItemOfSearchResult();
+            var selectedItem = searchForWebPage.SelectFirstAvailableItemOfSearchResult();
             var selectedProductPrice = searchForWebPage.GetPriceOfFirstItemOfSearchResult();
-            searchForWebPage.ClickOnSelectedItem(searchForWebPage.SelectedItem);
+            searchForWebPage.ClickOnSelectedItem(selectedItem);
 
             DetailProduct DetailProductWebPage = new DetailProduct(Driver, Wait);
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();
@@ -87,9 +87,9 @@ namespace AutomatedScript.Tests
             Assert.IsTrue(titleContainsItem, $"Title : {Driver.Title} does not contain search parameter: {itemName}");
 
             SearchFor searchForWebPage = new SearchFor(Driver, Wait);
-            searchForWebPage.SelectFirstAvailableItemOfSearchResult();
+            var selectedItem = searchForWebPage.SelectFirstAvailableItemOfSearchResult();
             var selectedProductPrice = searchForWebPage.GetPriceOfFirstItemOfSearchResult();
-            searchForWebPage.ClickOnSelectedItem(searchForWebPage.SelectedItem);
+            searchForWebPage.ClickOnSelectedItem(selectedItem);
 
             DetailProduct DetailProductWebPage = new DetailProduct(Driver, Wait);
             var detailProductPrice = DetailProductWebPage.GetPriceOfProduct();

@@ -17,22 +17,23 @@ namespace AutomatedScript.Pages
             wait = Wait;
         }
 
-        public IList<IWebElement> AvailableItems => wait.Until(d =>
+        private IList<IWebElement> AvailableItems => wait.Until(d =>
         {
             var elements = driver.FindElements(By.XPath("//div[contains(@class,'s-result-item') and contains(@class,'s-asin') and contains(@class,'sg-col-0-of-12') and contains(@class,'sg-col-16-of-20') and .//span[contains(@class,'a-price-whole')] and .//span[contains(@class,'a-price-fraction')]]"));
             return elements.Count > 0 ? elements : null;
         });
 
-        public IWebElement SelectedItem;
+        private IWebElement SelectedItem;
 
         public void ClickOnSelectedItem(IWebElement item)
         {
             item.FindElement(By.CssSelector("[class*='a-size-medium a-spacing-none a-color-base a-text-normal']")).Click();
         }
 
-        public void SelectFirstAvailableItemOfSearchResult()
+        public IWebElement SelectFirstAvailableItemOfSearchResult()
         {
             SelectedItem = GetFirstOrDefaultItemWithPrice(AvailableItems);
+            return SelectedItem;
         }
 
         public decimal GetPriceOfFirstItemOfSearchResult()
