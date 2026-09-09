@@ -3,6 +3,7 @@ name: Run NUnit and Selenium Tests and Test Result Visualization
 on:
   push:
     branches: [ Master, main ]
+
   pull_request:
     branches: [ Master, main ]
 
@@ -11,18 +12,14 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-
-    - name: Install Chrome
-      run: choco install googlechrome --ignore-checksums -y
-
-    - name: Install ChromeDriver
-      run: choco install chromedriver --ignore-checksums -y
 
     - name: Restore NuGet Packages
       run: dotnet restore AutomatedScript.sln
@@ -31,7 +28,7 @@ jobs:
       run: dotnet build AutomatedScript.sln --configuration Release --no-restore
 
     - name: Run NUnit and Selenium Tests
-      continue-on-error: true   # allows workflow to continue even if tests fail
+      continue-on-error: true
       env:
         CI: true
       run: dotnet test AutomatedScript.sln --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx;OutputDirectory=TestResults"
@@ -65,4 +62,4 @@ jobs:
       with:
         name: NUnit and Selenium Tests
         path: TestResults/TestResults.trx
-        reporter:  dotnet-trx
+        reporter: dotnet-trx
